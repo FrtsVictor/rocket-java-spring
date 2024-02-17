@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -26,6 +27,9 @@ public class CompanyEntity {
     @Email
     @Column(unique = true)
     private String email;
+
+    @Length(max = 100, min = 5)
+    private  String password;
 
     private String website;
 
