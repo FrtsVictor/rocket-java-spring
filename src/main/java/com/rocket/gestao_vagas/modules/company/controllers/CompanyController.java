@@ -1,9 +1,8 @@
 package com.rocket.gestao_vagas.modules.company.controllers;
 
 import com.rocket.gestao_vagas.modules.company.entities.CompanyEntity;
-import com.rocket.gestao_vagas.modules.company.useCases.CreateCompanyUseCase;
+import com.rocket.gestao_vagas.modules.company.use_cases.CreateCompanyUseCase;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,8 +14,11 @@ import java.net.URI;
 @RestController
 @RequestMapping("/company")
 public class CompanyController {
-    @Autowired
-    private CreateCompanyUseCase createCompanyUseCase;
+    private final CreateCompanyUseCase createCompanyUseCase;
+
+    public CompanyController(CreateCompanyUseCase createCompanyUseCase) {
+        this.createCompanyUseCase = createCompanyUseCase;
+    }
 
     @PostMapping
     public ResponseEntity<String> create(@Valid @RequestBody CompanyEntity companyEntity) {

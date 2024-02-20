@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ExceptionHandlerController {
@@ -28,7 +27,7 @@ public class ExceptionHandlerController {
         var errors = e.getBindingResult().getFieldErrors().stream().map(err -> {
             String message = messageSource.getMessage(err, LocaleContextHolder.getLocale());
             return new ErrorMessageDto(message, err.getField());
-        }).collect(Collectors.toList());
+        }).toList();
 
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
@@ -40,7 +39,7 @@ public class ExceptionHandlerController {
 
     @ExceptionHandler(AppAuthenticationException.class)
     public ResponseEntity<String> handleAppAuthenticationException(AppAuthenticationException e) {
-        return new ResponseEntity<>(e.getMessage(),HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 }
 

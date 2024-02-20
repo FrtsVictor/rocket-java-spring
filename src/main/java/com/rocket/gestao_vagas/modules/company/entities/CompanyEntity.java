@@ -29,7 +29,7 @@ public class CompanyEntity {
     private String email;
 
     @Length(max = 100, min = 5)
-    private  String password;
+    private String password;
 
     private String website;
 

@@ -1,4 +1,4 @@
-package com.rocket.gestao_vagas.modules.company.useCases;
+package com.rocket.gestao_vagas.modules.company.use_cases;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -6,7 +6,6 @@ import com.rocket.gestao_vagas.exceptions.AppAuthenticationException;
 import com.rocket.gestao_vagas.modules.company.dto.AuthCompanyRequestDto;
 import com.rocket.gestao_vagas.modules.company.dto.AuthCompanyResponseDto;
 import com.rocket.gestao_vagas.modules.company.repositories.CompanyRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,11 +20,15 @@ public class AuthCompanyUseCase {
     @Value("${security.auth.secret.company}")
     private String secret;
 
-    @Autowired
-    CompanyRepository companyRepository;
+    private final CompanyRepository companyRepository;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+
+
+    public AuthCompanyUseCase(CompanyRepository companyRepository, PasswordEncoder passwordEncoder) {
+        this.companyRepository = companyRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public AuthCompanyResponseDto execute(AuthCompanyRequestDto authCompanyRequestDto) {
         var company = this.companyRepository.findByUsername(authCompanyRequestDto.getUsername()).orElseThrow(AppAuthenticationException::new);

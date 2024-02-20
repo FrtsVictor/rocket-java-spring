@@ -1,4 +1,4 @@
-package com.rocket.gestao_vagas.modules.candidate.useCases;
+package com.rocket.gestao_vagas.modules.candidate.use_cases;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -6,7 +6,6 @@ import com.rocket.gestao_vagas.exceptions.AppAuthenticationException;
 import com.rocket.gestao_vagas.modules.candidate.dto.AuthCandidateRequestDto;
 import com.rocket.gestao_vagas.modules.candidate.dto.AuthCandidateResponseDto;
 import com.rocket.gestao_vagas.modules.candidate.repositories.CandidateRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,14 +17,17 @@ import java.util.List;
 @Service
 public class AuthCandidateUseCase {
 
-    @Autowired
-    private CandidateRepository candidateRepository;
+    private final CandidateRepository candidateRepository;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private final PasswordEncoder  passwordEncoder;
 
     @Value("${security.auth.secret.candidate}")
     private String secret;
+
+    public AuthCandidateUseCase(CandidateRepository candidateRepository, PasswordEncoder passwordEncoder) {
+        this.candidateRepository = candidateRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public AuthCandidateResponseDto execute(AuthCandidateRequestDto authCandidateRequestDto) {
         var candidate = this.candidateRepository.findByUsername(authCandidateRequestDto.getUsername()).orElseThrow(AppAuthenticationException::new);

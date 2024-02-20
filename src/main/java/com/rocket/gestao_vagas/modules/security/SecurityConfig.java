@@ -1,6 +1,5 @@
 package com.rocket.gestao_vagas.modules.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -15,11 +14,14 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private SecurityFilterCompany securityFilterCompany;
+    private final SecurityFilterCompany securityFilterCompany;
 
-    @Autowired
-    private SecurityFilterCandidate securityCandidateFilter;
+    private final SecurityFilterCandidate securityCandidateFilter;
+
+    public SecurityConfig(SecurityFilterCompany securityFilterCompany, SecurityFilterCandidate securityCandidateFilter) {
+        this.securityFilterCompany = securityFilterCompany;
+        this.securityCandidateFilter = securityCandidateFilter;
+    }
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

@@ -2,43 +2,43 @@ package com.rocket.gestao_vagas.modules.candidate.controllers;
 
 import com.rocket.gestao_vagas.modules.candidate.CandidateEntity;
 import com.rocket.gestao_vagas.modules.candidate.dto.ProfileCandidateResponseDto;
-import com.rocket.gestao_vagas.modules.candidate.useCases.CreateCandidateUseCase;
-import com.rocket.gestao_vagas.modules.candidate.useCases.ProfileCandidateUseCase;
+import com.rocket.gestao_vagas.modules.candidate.use_cases.CreateCandidateUseCase;
+import com.rocket.gestao_vagas.modules.candidate.use_cases.ProfileCandidateUseCase;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.UUID;
 
 @RestController()
 @RequestMapping("/candidate")
 public class CandidateController {
 
-    @Autowired
-    private CreateCandidateUseCase createCandidateUseCase;
+    private final CreateCandidateUseCase createCandidateUseCase;
 
-    @Autowired
-    private ProfileCandidateUseCase profileCandidateUseCase;
+    private final ProfileCandidateUseCase profileCandidateUseCase;
 
-    public CandidateController(CreateCandidateUseCase createCandidateUseCase) {
+    public CandidateController(CreateCandidateUseCase createCandidateUseCase, ProfileCandidateUseCase profileCandidateUseCase) {
         this.createCandidateUseCase = createCandidateUseCase;
+        this.profileCandidateUseCase = profileCandidateUseCase;
     }
 
     @PostMapping()
-    public ResponseEntity<Object> create(@Valid @RequestBody() CandidateEntity candidate) {
+    public ResponseEntity<UUID> create(@Valid @RequestBody() CandidateEntity candidate) {
         var createdCandidate = this.createCandidateUseCase.execute(candidate);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.created(URI.create("/")).body(createdCandidate.getId());
     }
 
     @GetMapping
     @PreAuthorize("hasRole('CANDIDATE')")
-    public ProfileCandidateResponseDto get(HttpServletRequest request) {
+    public ResponseEntity<ProfileCandidateResponseDto> get(HttpServletRequest request) {
         var candidateId = request.getAttribute("candidate_id");
-        return this.profileCandidateUseCase.execute(UUID.fromString(candidateId.toString()));
+        var cadidate = this.profileCandidateUseCase.execute(UUID.fromString(candidateId.toString()));
+
+        return ResponseEntity.ok().body(cadidate);
     }
 
 }
