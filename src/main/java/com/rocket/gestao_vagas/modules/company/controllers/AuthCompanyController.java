@@ -1,6 +1,7 @@
 package com.rocket.gestao_vagas.modules.company.controllers;
 
-import com.rocket.gestao_vagas.modules.company.dto.AuthCompanyDto;
+import com.rocket.gestao_vagas.modules.company.dto.AuthCompanyRequestDto;
+import com.rocket.gestao_vagas.modules.company.dto.AuthCompanyResponseDto;
 import com.rocket.gestao_vagas.modules.company.useCases.AuthCompanyUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -10,15 +11,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/company")
 public class AuthCompanyController {
 
     @Autowired
     AuthCompanyUseCase authCompanyUseCase;
 
-    @PostMapping("/company")
-    public ResponseEntity<Object> authenticate(@RequestBody AuthCompanyDto authCompanyDto) {
-        return ResponseEntity.ok().body(this.authCompanyUseCase.execute(authCompanyDto));
+    @PostMapping("/auth")
+    public ResponseEntity<AuthCompanyResponseDto> authenticate(@RequestBody AuthCompanyRequestDto authCompanyRequestDto) {
+        return ResponseEntity.ok().body(this.authCompanyUseCase.execute(authCompanyRequestDto));
     }
 
 }
